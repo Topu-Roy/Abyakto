@@ -19,9 +19,10 @@ model User {
   banned        Boolean?  @default(false)
   banReason     String?
   banExpires    DateTime?
-  sessions      Session[]
+sessions      Session[]
   accounts      Account[]
   passkeys      Passkey[]
+  quotes        Quote[]
 
   @@unique([email])
   @@map("user")
@@ -93,4 +94,59 @@ model Passkey {
   @@index([userId])
   @@index([credentialID])
   @@map("passkey")
+}
+
+model Quote {
+  id         String      @id @default(uuid())
+  text       String      @db.Text
+  author     String?
+  source     String?
+  language   String      @default("bn")
+  isPublic   Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  designs    Design[]
+  savedCards SavedCard[]
+
+  @@index([userId])
+  @@index([isPublic])
+  @@map("quote")
+}
+
+model Design {
+  id              String   @id @default(uuid())
+  fontId          String
+  backgroundType  String
+  backgroundValue String   @db.Text
+  textColor       String?
+  textAlign       String   @default("center")
+  fontSize        String   @default("medium")
+  padding         String   @default("medium")
+  textPosition    String   @default("center")
+  showAttribution Boolean  @default(true)
+  quoteMarkStyle  String?
+  borderStyle     String?
+  patternOverlay  String?
+  aspectRatio     String   @default("square")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  quoteId         String
+  quote           Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@map("design")
+}
+
+model SavedCard {
+  id           String   @id @default(uuid())
+  imageUrl     String?
+  designConfig String   @db.Text
+  createdAt    DateTime @default(now())
+  quoteId      String
+  quote        Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@map("saved_card")
 }

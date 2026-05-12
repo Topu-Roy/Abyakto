@@ -1,6 +1,6 @@
 {
   "name": "abyakto",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
+    "html-to-image": "^1.11.13",
     "jotai": "^2.20.0",
     "lucide-react": "^1.14.0",
     "next": "16.2.6",
