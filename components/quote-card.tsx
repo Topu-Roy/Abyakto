@@ -33,7 +33,9 @@ export function QuoteCard({
   const d = design ?? localDesign;
 
   const font = getFontById(d.fontId);
-  const fontFamily = font ? `font-${font.id}, sans-serif` : "sans-serif";
+  const fontFamily = font?.cssVar 
+    ? (font.cssVar.includes(",") ? font.cssVar : `var(${font.cssVar})`)
+    : "sans-serif";
 
   const bgStyle: React.CSSProperties = {
     background: d.backgroundType === "solid" ? d.backgroundValue : d.backgroundValue,
@@ -83,6 +85,7 @@ export function QuoteCard({
             fontSize: fontSizeMap[d.fontSize as keyof typeof fontSizeMap] || "2.5rem",
             color: textColor,
             textAlign: d.textAlign as "left" | "center" | "right",
+            whiteSpace: "pre-wrap",
           }}
         >
           {d.quoteMarkStyle !== "none" && (

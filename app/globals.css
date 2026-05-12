@@ -2,6 +2,104 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@font-face {
+  font-family: "Aloka";
+  src: url("/fonts/Aloka font/Aloka  Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Codepotro";
+  src: url("/fonts/Codepotro Hadi/Hadi.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dhaleshwari";
+  src: url("/fonts/Dhaleshwari/Dhaleshwari Normal.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dhaleshwari";
+  src: url("/fonts/Dhaleshwari/Dhaleshwari Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "FNAkar";
+  src: url("/fonts/FN Akar/Unicode/Akar-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNDukkho";
+  src: url("/fonts/FN Dukkho-Bilsahi/Unicode/FN Dukkho Bilashi Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNKornofuli";
+  src: url("/fonts/FN Kornofuli/Unicode/Kornofuli Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNMahinAklima";
+  src: url("/fonts/FNMahinAklima/FN Mahin Aklima/FN Mahin Aklima Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNMashbik";
+  src: url("/fonts/FN Mashbik Mehreen/Unicode/FN Mahreen Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNSabina";
+  src: url("/fonts/FN Sabina Shorolipi/Unicode/FN_ Sabina Shorolipi Bangla Unicode Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNShorif";
+  src: url("/fonts/FN Shorif Opekkha/Unicode/FN Shorif Opekkha Unicode.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNSrabondhara";
+  src: url("/fonts/FN Srabondhara/Unicode/FN Srabondhara Unicode.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FNTauhid";
+  src: url("/fonts/FN-Tauhid-Bangla/Unicode/FN Tauhid Bangla Unicode.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NillJannati";
+  src: url("/fonts/Nill Jannati/Nill Jannati Matra/Unicode/Nill Jannati Matra Unicode.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
