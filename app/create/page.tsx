@@ -15,6 +15,9 @@ export default function CreatePage() {
   const [exportFormat, setExportFormat] = useState<"png" | "jpeg">("png");
   const cardRef = useRef<HTMLDivElement>(null);
 
+  const isTransparent = design.backgroundType === "transparent";
+  const activeFormat = isTransparent ? "png" : exportFormat;
+
   const handleExport = async () => {
     if (!cardRef.current) return;
 
@@ -26,19 +29,21 @@ export default function CreatePage() {
       const getBackgroundColor = () => {
         if (design.backgroundType === "solid") return design.backgroundValue;
         if (design.backgroundType === "texture") return design.textureBgColor ?? "#faf8f5";
+        if (design.backgroundType === "transparent") return undefined;
         return undefined;
       };
 
-      const exportFunc = exportFormat === "png" ? toPng : toJpeg;
+      const exportFunc = isTransparent ? toPng : (exportFormat === "png" ? toPng : toJpeg);
       const dataUrl = await exportFunc(cardRef.current, {
         pixelRatio: scale,
-        quality: exportFormat === "jpeg" ? 0.92 : undefined,
+        quality: exportFormat === "jpeg" && !isTransparent ? 0.92 : undefined,
         cacheBust: true,
         backgroundColor: getBackgroundColor(),
       });
 
+      const ext = isTransparent ? "png" : exportFormat;
       const link = document.createElement("a");
-      link.download = `abyakto-${quote.text.slice(0, 20).replace(/\s+/g, "-")}-${Date.now()}.${exportFormat}`;
+      link.download = `abyakto-${quote.text.slice(0, 20).replace(/\s+/g, "-")}-${Date.now()}.${ext}`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -67,22 +72,27 @@ export default function CreatePage() {
                   <button
                     onClick={() => setExportFormat("png")}
                     className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                      exportFormat === "png" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                      activeFormat === "png" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
                     }`}
                   >
                     PNG
                   </button>
                   <button
-                    onClick={() => setExportFormat("jpeg")}
+                    onClick={() => !isTransparent && setExportFormat("jpeg")}
+                    disabled={isTransparent}
                     className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                      exportFormat === "jpeg" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                      isTransparent
+                        ? "opacity-40 cursor-not-allowed"
+                        : activeFormat === "jpeg"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted hover:bg-muted/80"
                     }`}
                   >
                     JPEG
                   </button>
                 </div>
                 <Button onClick={handleExport} disabled={isExporting} size="sm">
-                  {isExporting ? "Downloading..." : "Download"}
+                  {isExporting ? "Downloading..." : `Download ${activeFormat.toUpperCase()}`}
                 </Button>
               </div>
 

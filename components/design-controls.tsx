@@ -54,6 +54,7 @@ export function DesignControls() {
   const bgTypes: { value: BackgroundType; label: string }[] = [
     { value: "solid", label: "Solid" },
     { value: "texture", label: "Texture" },
+    { value: "transparent", label: "Transparent" },
   ];
 
   return (
@@ -284,6 +285,20 @@ export function DesignControls() {
                 </div>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="transparent" className="mt-3">
+            <div className="flex flex-col items-center gap-3 py-4 text-center text-sm text-muted-foreground">
+              <div className="size-12 rounded-full border-2 border-dashed flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-muted-foreground">
+                  <rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                  <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1"/>
+                  <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" strokeWidth="1"/>
+                </svg>
+              </div>
+              <p>No background. Only quote text will render.</p>
+              <p className="text-xs">Best for overlaying on images or custom backgrounds.</p>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

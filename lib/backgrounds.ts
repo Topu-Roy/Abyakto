@@ -1,4 +1,4 @@
-export type BackgroundType = "solid" | "gradient" | "texture" | "image";
+export type BackgroundType = "solid" | "texture" | "transparent";
 
 export interface SolidColor {
   id: string;
@@ -107,8 +107,6 @@ export function getBackgroundByType(type: BackgroundType, id: string) {
   switch (type) {
     case "solid":
       return solidColors.find(c => c.id === id);
-    case "gradient":
-      return gradients.find(g => g.id === id);
     case "texture":
       return textures.find(t => t.id === id);
     default:

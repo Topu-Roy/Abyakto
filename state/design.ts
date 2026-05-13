@@ -3,7 +3,7 @@
 import { atomWithStorage } from "jotai/utils";
 
 export type AspectRatio = "square" | "portrait" | "story" | "landscape";
-export type BackgroundType = "solid" | "gradient" | "texture" | "image";
+export type BackgroundType = "solid" | "gradient" | "texture" | "image" | "transparent";
 export type TextAlign = "left" | "center" | "right";
 export type FontSize = "small" | "medium" | "large" | "xl";
 export type TextPosition = "top" | "center" | "bottom";

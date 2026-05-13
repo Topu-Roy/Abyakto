@@ -56,6 +56,9 @@ export function QuoteCard({ quote, design, className, ref }: Props) {
         backgroundRepeat: "repeat",
       };
     }
+    if (d.backgroundType === "transparent") {
+      return {};
+    }
     return {};
   };
 
