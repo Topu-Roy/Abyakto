@@ -20,9 +20,11 @@ export interface DesignData {
   backgroundType: BackgroundType;
   backgroundValue: string;
   textureId?: string;
+  textureBgColor?: string;
   textColor?: string;
   textAlign: TextAlign;
   fontSize: FontSize;
+  lineHeight: string;
   padding: string;
   textPosition: TextPosition;
   showAttribution: boolean;
@@ -42,8 +44,10 @@ const defaultDesign: DesignData = {
   fontId: "kalpurush",
   backgroundType: "solid",
   backgroundValue: "#faf8f5",
+  textureBgColor: "#faf8f5",
   textAlign: "center",
   fontSize: "medium",
+  lineHeight: "relaxed",
   padding: "medium",
   textPosition: "center",
   showAttribution: true,
@@ -66,4 +70,10 @@ export const fontSizeMap: Record<FontSize, string> = {
   medium: "2.5rem",
   large: "3rem",
   xl: "3.5rem",
+};
+
+export const lineHeightMap: Record<string, string> = {
+  tight: "1.2",
+  relaxed: "1.625",
+  loose: "2",
 };

@@ -10,16 +10,17 @@ import {
   type TextPosition,
 } from "@/state/design";
 import { useAtom } from "jotai";
-import { gradients, solidColors, textures, type BackgroundType } from "@/lib/backgrounds";
+import { solidColors, textures, type BackgroundType } from "@/lib/backgrounds";
 import { allFonts } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function DesignControls() {
   const [design, setDesign] = useAtom(designAtom);
   const [quote, setQuote] = useAtom(quoteAtom);
 
-  const updateDesign = (key: string, value: string) => {
+  const updateDesign = (key: string, value: string | boolean) => {
     setDesign({ ...design, [key]: value });
   };
 
@@ -52,7 +53,6 @@ export function DesignControls() {
 
   const bgTypes: { value: BackgroundType; label: string }[] = [
     { value: "solid", label: "Solid" },
-    { value: "gradient", label: "Gradient" },
     { value: "texture", label: "Texture" },
   ];
 
@@ -146,8 +146,36 @@ export function DesignControls() {
       </div>
 
       <div>
+        <h3 className="mb-3 text-sm font-medium">Line Height</h3>
+        <div className="flex gap-2">
+          {[
+            { value: "tight", label: "Tight" },
+            { value: "relaxed", label: "Relaxed" },
+            { value: "loose", label: "Loose" },
+          ].map(lh => (
+            <button
+              key={lh.value}
+              onClick={() => updateDesign("lineHeight", lh.value)}
+              className={cn(
+                "flex-1 rounded-md border p-2 text-sm",
+                (design.lineHeight ?? "relaxed") === lh.value
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background hover:bg-muted"
+              )}
+            >
+              {lh.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
         <h3 className="mb-3 text-sm font-medium">Background</h3>
-        <Tabs value={design.backgroundType} onValueChange={(v) => updateDesign("backgroundType", v)} className="w-full">
+        <Tabs
+          value={design.backgroundType}
+          onValueChange={v => updateDesign("backgroundType", v as string)}
+          className="w-full"
+        >
           <TabsList className="w-full">
             {bgTypes.map(bt => (
               <TabsTrigger key={bt.value} value={bt.value} className="flex-1">
@@ -157,7 +185,7 @@ export function DesignControls() {
           </TabsList>
 
           <TabsContent value="solid" className="mt-3">
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid max-h-32 grid-cols-5 gap-2 overflow-y-auto">
               {solidColors.map(color => (
                 <button
                   key={color.id}
@@ -178,30 +206,8 @@ export function DesignControls() {
             </div>
           </TabsContent>
 
-          <TabsContent value="gradient" className="mt-3">
-            <div className="grid grid-cols-3 gap-2">
-              {gradients.map(grad => (
-                <button
-                  key={grad.id}
-                  onClick={() => {
-                    updateDesign("backgroundType", "gradient");
-                    updateDesign("backgroundValue", grad.css);
-                  }}
-                  className={cn(
-                    "aspect-video rounded-md border-2",
-                    design.backgroundType === "gradient" && design.backgroundValue === grad.css
-                      ? "border-primary ring-2 ring-primary"
-                      : "border-transparent"
-                  )}
-                  style={{ background: grad.css }}
-                  title={grad.banglaName}
-                />
-              ))}
-            </div>
-          </TabsContent>
-
           <TabsContent value="texture" className="mt-3">
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid max-h-32 grid-cols-3 gap-2 overflow-y-auto">
               {textures.map(tex => (
                 <button
                   key={tex.id}
@@ -211,16 +217,59 @@ export function DesignControls() {
                     updateDesign("textureId", tex.id);
                   }}
                   className={cn(
-                    "aspect-video rounded-md border-2 bg-muted",
-                    design.backgroundType === "texture" && design.backgroundValue === tex.css
+                    "aspect-video rounded-md border-2",
+                    design.backgroundType === "texture" && design.textureId === tex.id
                       ? "border-primary ring-2 ring-primary"
                       : "border-transparent"
                   )}
-                  style={{ background: tex.css }}
+                  style={{
+                    background: `${design.textureBgColor ?? "#faf8f5"}`,
+                    backgroundImage: `url(/textures/${tex.id}.png)`,
+                    backgroundSize: "64px 64px",
+                  }}
                   title={tex.banglaName}
                 />
               ))}
             </div>
+            {design.backgroundType === "texture" && (
+              <div className="mt-3">
+                <h4 className="mb-2 text-xs font-medium text-muted-foreground">Background Color</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    "#faf8f5",
+                    "#ffffff",
+                    "#e8dfd0",
+                    "#1a1a2e",
+                    "#2d4a3e",
+                    "#36454f",
+                    "#64748b",
+                    "#f4a261",
+                    "#c9775d",
+                    "#c9a9a6",
+                  ].map(color => (
+                    <button
+                      key={color}
+                      onClick={() => updateDesign("textureBgColor", color)}
+                      className={cn(
+                        "h-6 w-6 rounded-full border-2 transition-transform hover:scale-110",
+                        design.textureBgColor === color
+                          ? "border-primary ring-2 ring-primary ring-offset-1"
+                          : "border-transparent"
+                      )}
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                  <input
+                    type="color"
+                    value={design.textureBgColor ?? "#faf8f5"}
+                    onChange={e => updateDesign("textureBgColor", e.target.value)}
+                    className="h-6 w-6 cursor-pointer rounded-full border-0"
+                    title="Custom color"
+                  />
+                </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
@@ -240,6 +289,49 @@ export function DesignControls() {
               {align.charAt(0).toUpperCase() + align.slice(1)}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-sm font-medium">Text Color</h3>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { value: "", label: "Auto" },
+            { value: "#000000", label: "Black" },
+            { value: "#ffffff", label: "White" },
+            { value: "#36454f", label: "Charcoal" },
+            { value: "#6b4c35", label: "Brown" },
+            { value: "#1a1a2e", label: "Navy" },
+            { value: "#2d4a3e", label: "Forest" },
+            { value: "#8b4513", label: "Saddle" },
+          ].map(color => (
+            <button
+              key={color.value}
+              onClick={() => updateDesign("textColor", color.value)}
+              className={cn(
+                "h-8 w-8 rounded-full border-2",
+                design.textColor === color.value || (!design.textColor && color.value === "")
+                  ? "border-primary ring-2 ring-primary"
+                  : "border-transparent"
+              )}
+              style={{
+                backgroundColor:
+                  color.value === ""
+                    ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
+                    : (color.value ?? "#faf8f5"),
+                background:
+                  color.value === "" ? "conic-gradient(#ccc 0 25%, #fff 0 50%, #ccc 0 75%, #fff 0)" : color.value,
+              }}
+              title={color.label}
+            />
+          ))}
+          <input
+            type="color"
+            value={design.textColor ?? "#000000"}
+            onChange={e => updateDesign("textColor", e.target.value)}
+            className="h-8 w-8 cursor-pointer rounded-full border-0"
+            title="Custom color"
+          />
         </div>
       </div>
 
@@ -302,12 +394,10 @@ export function DesignControls() {
       </div>
 
       <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
+        <Checkbox
           id="showAttribution"
-          checked={design.showAttribution}
-          onChange={e => updateDesign("showAttribution", String(e.target.checked))}
-          className="h-4 w-4"
+          checked={Boolean(design.showAttribution) ?? false}
+          onCheckedChange={v => updateDesign("showAttribution", v === true)}
         />
         <label htmlFor="showAttribution" className="text-sm">
           Show Attribution

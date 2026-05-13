@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { quoteAtom, designAtom } from "@/state/design";
+import { designAtom, quoteAtom } from "@/state/design";
 import { toJpeg, toPng } from "html-to-image";
 import { useAtom } from "jotai";
 import { DesignControls } from "@/components/design-controls";
@@ -25,8 +25,7 @@ export default function CreatePage() {
 
       const getBackgroundColor = () => {
         if (design.backgroundType === "solid") return design.backgroundValue;
-        if (design.backgroundType === "texture") return "#faf8f5";
-        if (design.backgroundType === "gradient") return "#faf8f5";
+        if (design.backgroundType === "texture") return design.textureBgColor ?? "#faf8f5";
         return undefined;
       };
 
@@ -87,7 +86,7 @@ export default function CreatePage() {
                 </Button>
               </div>
 
-              <div className="rounded-lg p-8 shadow-lg border">
+              <div className="rounded-lg border p-8 shadow-lg">
                 <QuoteCard ref={cardRef} />
               </div>
             </div>

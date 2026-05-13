@@ -1,6 +1,6 @@
 {
   "name": "abyakto",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,7 @@
     "@better-auth/passkey": "^1.6.9",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@radix-ui/react-checkbox": "^1.3.3",
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-query": "^5.100.9",
     "@uploadthing/react": "^7.3.3",
