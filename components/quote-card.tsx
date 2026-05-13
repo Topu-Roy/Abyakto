@@ -1,20 +1,19 @@
 "use client";
 
+import type { RefObject } from "react";
 import { designAtom, fontSizeMap, quoteAtom } from "@/state/design";
 import { useAtom } from "jotai";
 import { getFontById } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { TextureOverlay } from "./texture-overlay";
 
-export function QuoteCard({
-  quote,
-  design,
-  className,
-}: {
+type Props = {
   quote?: { text: string; author?: string; source?: string };
   design?: {
     fontId: string;
     backgroundType: string;
     backgroundValue: string;
+    textureId?: string;
     textColor?: string;
     textAlign: string;
     fontSize: string;
@@ -25,7 +24,10 @@ export function QuoteCard({
     aspectRatio: string;
   };
   className?: string;
-}) {
+  ref?: RefObject<HTMLDivElement | null>;
+};
+
+export function QuoteCard({ quote, design, className, ref }: Props) {
   const [localQuote] = useAtom(quoteAtom);
   const [localDesign] = useAtom(designAtom);
 
@@ -33,13 +35,39 @@ export function QuoteCard({
   const d = design ?? localDesign;
 
   const font = getFontById(d.fontId);
-  const fontFamily = font?.cssVar 
-    ? (font.cssVar.includes(",") ? font.cssVar : `var(${font.cssVar})`)
+  const fontFamily = font?.cssVar
+    ? font.cssVar.includes(",")
+      ? font.cssVar
+      : `var(${font.cssVar})`
     : "sans-serif";
 
-  const bgStyle: React.CSSProperties = {
-    background: d.backgroundType === "solid" ? d.backgroundValue : d.backgroundValue,
+  const getBackgroundStyle = (): React.CSSProperties => {
+    if (d.backgroundType === "solid") {
+      return { background: d.backgroundValue };
+    }
+    if (d.backgroundType === "gradient") {
+      return { background: d.backgroundValue };
+    }
+    if (d.backgroundType === "texture") {
+      return { background: "#faf8f5" };
+    }
+    return {};
   };
+
+  const isTexture = d.backgroundType === "texture";
+  const svgTextureIds = [
+    "paper",
+    "grain",
+    "noise",
+    "canvas",
+    "marble",
+    "waves",
+    "vintage",
+    "subtle",
+    "speckle",
+    "leaf",
+  ];
+  const isSvgTexture = isTexture && d.textureId && svgTextureIds.includes(d.textureId);
 
   const textColor = d.textColor ?? (d.backgroundType === "solid" ? "inherit" : "#000");
 
@@ -65,27 +93,41 @@ export function QuoteCard({
 
   return (
     <div
+      ref={ref}
       className={cn("relative w-full overflow-hidden", className)}
       style={{
         aspectRatio: aspectMap[d.aspectRatio] ?? "1",
-        ...bgStyle,
+        ...getBackgroundStyle(),
+        overflow: "hidden",
       }}
     >
+      {isSvgTexture && d.textureId && <TextureOverlay textureId={d.textureId} />}
+      {isTexture && !isSvgTexture && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: d.backgroundValue,
+            opacity: 1,
+          }}
+        />
+      )}
       <div
         className="absolute inset-0 flex items-center justify-center p-4"
         style={{
           padding: paddingMap[d.padding] ?? "2rem",
           alignItems: positionMap[d.textPosition] ?? "center",
+          overflow: "hidden",
         }}
       >
         <div
-          className="w-full max-w-full text-center"
+          className="w-full max-w-full text-center wrap-break-word"
           style={{
             fontFamily,
             fontSize: fontSizeMap[d.fontSize as keyof typeof fontSizeMap] || "2.5rem",
             color: textColor,
             textAlign: d.textAlign as "left" | "center" | "right",
             whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
           }}
         >
           {d.quoteMarkStyle !== "none" && (

@@ -208,6 +208,7 @@ export function DesignControls() {
                   onClick={() => {
                     updateDesign("backgroundType", "texture");
                     updateDesign("backgroundValue", tex.css);
+                    updateDesign("textureId", tex.id);
                   }}
                   className={cn(
                     "aspect-video rounded-md border-2 bg-muted",

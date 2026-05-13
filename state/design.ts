@@ -19,6 +19,7 @@ export interface DesignData {
   fontId: string;
   backgroundType: BackgroundType;
   backgroundValue: string;
+  textureId?: string;
   textColor?: string;
   textAlign: TextAlign;
   fontSize: FontSize;
