@@ -107,22 +107,24 @@ export function DesignControls() {
 
       <div>
         <h3 className="mb-3 text-sm font-medium">Font</h3>
-        <div className="grid max-h-48 grid-cols-2 gap-2 overflow-y-auto">
-          {allFonts.map(font => (
-            <button
-              key={font.id}
-              onClick={() => updateDesign("fontId", font.id)}
-              className={cn(
-                "rounded-md border p-2 text-left transition-colors",
-                design.fontId === font.id ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted"
-              )}
-              style={{ fontFamily: `var(--font-${font.id})` }}
-            >
-              <div className="truncate text-sm">{font.banglaName}</div>
-              <div className="text-xs opacity-70">{font.name}</div>
-            </button>
-          ))}
-        </div>
+        <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto">
+            {allFonts.map(font => (
+              <button
+                key={font.id}
+                onClick={() => updateDesign("fontId", font.id)}
+                className={cn(
+                  "rounded-md border p-2 text-left transition-all",
+                  design.fontId === font.id
+                    ? "border-primary ring-2 ring-primary bg-primary/5"
+                    : "bg-background hover:bg-muted"
+                )}
+                style={font.cssVar?.includes(",") ? { fontFamily: font.cssVar } : undefined}
+              >
+                <div className="truncate text-sm">{font.banglaName}</div>
+                <div className="text-xs opacity-70">{font.name}</div>
+              </button>
+            ))}
+          </div>
       </div>
 
       <div>
@@ -185,7 +187,7 @@ export function DesignControls() {
           </TabsList>
 
           <TabsContent value="solid" className="mt-3">
-            <div className="grid max-h-32 grid-cols-5 gap-2 overflow-y-auto">
+            <div className="grid max-h-40 grid-cols-5 gap-2 overflow-y-auto">
               {solidColors.map(color => (
                 <button
                   key={color.id}
@@ -194,20 +196,26 @@ export function DesignControls() {
                     updateDesign("backgroundValue", color.color);
                   }}
                   className={cn(
-                    "aspect-square rounded-md border-2",
+                    "flex flex-col items-center gap-0.5 rounded-md border p-1",
                     design.backgroundType === "solid" && design.backgroundValue === color.color
                       ? "border-primary ring-2 ring-primary"
                       : "border-transparent"
                   )}
-                  style={{ backgroundColor: color.color }}
-                  title={color.banglaName}
-                />
+                >
+                  <div
+                    className="w-full aspect-square rounded-sm"
+                    style={{ backgroundColor: color.color }}
+                  />
+                  <span className="text-[9px] leading-tight text-center text-muted-foreground truncate w-full">
+                    {color.banglaName}
+                  </span>
+                </button>
               ))}
             </div>
           </TabsContent>
 
           <TabsContent value="texture" className="mt-3">
-            <div className="grid max-h-32 grid-cols-3 gap-2 overflow-y-auto">
+            <div className="grid max-h-56 grid-cols-3 gap-2 overflow-y-auto">
               {textures.map(tex => (
                 <button
                   key={tex.id}
@@ -217,18 +225,24 @@ export function DesignControls() {
                     updateDesign("textureId", tex.id);
                   }}
                   className={cn(
-                    "aspect-video rounded-md border-2",
+                    "flex flex-col items-center gap-1 rounded-md border-2 p-1 transition-all",
                     design.backgroundType === "texture" && design.textureId === tex.id
-                      ? "border-primary ring-2 ring-primary"
-                      : "border-transparent"
+                      ? "border-primary ring-2 ring-primary bg-primary/5"
+                      : "border-transparent hover:border-muted"
                   )}
-                  style={{
-                    background: `${design.textureBgColor ?? "#faf8f5"}`,
-                    backgroundImage: `url(/textures/${tex.id}.png)`,
-                    backgroundSize: "64px 64px",
-                  }}
-                  title={tex.banglaName}
-                />
+                >
+                  <div
+                    className="w-full aspect-video rounded-sm"
+                    style={{
+                      backgroundColor: design.textureBgColor ?? "#faf8f5",
+                      backgroundImage: `url(/textures/${tex.id}.png)`,
+                      backgroundSize: "64px 64px",
+                    }}
+                  />
+                  <span className="text-[10px] leading-tight text-center text-muted-foreground truncate w-full">
+                    {tex.banglaName}
+                  </span>
+                </button>
               ))}
             </div>
             {design.backgroundType === "texture" && (
@@ -236,35 +250,35 @@ export function DesignControls() {
                 <h4 className="mb-2 text-xs font-medium text-muted-foreground">Background Color</h4>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    "#faf8f5",
-                    "#ffffff",
-                    "#e8dfd0",
-                    "#1a1a2e",
-                    "#2d4a3e",
-                    "#36454f",
-                    "#64748b",
-                    "#f4a261",
-                    "#c9775d",
-                    "#c9a9a6",
-                  ].map(color => (
+                    { value: "#faf8f5", label: "Cream" },
+                    { value: "#ffffff", label: "White" },
+                    { value: "#e8dfd0", label: "Sand" },
+                    { value: "#1a1a2e", label: "Navy" },
+                    { value: "#2d4a3e", label: "Forest" },
+                    { value: "#36454f", label: "Charcoal" },
+                    { value: "#64748b", label: "Slate" },
+                    { value: "#f4a261", label: "Orange" },
+                    { value: "#c9775d", label: "Terracotta" },
+                    { value: "#c9a9a6", label: "Rose" },
+                  ].map(c => (
                     <button
-                      key={color}
-                      onClick={() => updateDesign("textureBgColor", color)}
+                      key={c.value}
+                      onClick={() => updateDesign("textureBgColor", c.value)}
                       className={cn(
-                        "h-6 w-6 rounded-full border-2 transition-transform hover:scale-110",
-                        design.textureBgColor === color
+                        "size-8 rounded-full border-2 transition-transform hover:scale-110",
+                        design.textureBgColor === c.value
                           ? "border-primary ring-2 ring-primary ring-offset-1"
                           : "border-transparent"
                       )}
-                      style={{ backgroundColor: color }}
-                      title={color}
+                      style={{ backgroundColor: c.value }}
+                      title={c.label}
                     />
                   ))}
                   <input
                     type="color"
                     value={design.textureBgColor ?? "#faf8f5"}
                     onChange={e => updateDesign("textureBgColor", e.target.value)}
-                    className="h-6 w-6 cursor-pointer rounded-full border-0"
+                    className="size-8 cursor-pointer rounded-full border-0"
                     title="Custom color"
                   />
                 </div>
@@ -304,27 +318,28 @@ export function DesignControls() {
             { value: "#1a1a2e", label: "Navy" },
             { value: "#2d4a3e", label: "Forest" },
             { value: "#8b4513", label: "Saddle" },
-          ].map(color => (
-            <button
-              key={color.value}
-              onClick={() => updateDesign("textColor", color.value)}
-              className={cn(
-                "h-8 w-8 rounded-full border-2",
-                design.textColor === color.value || (!design.textColor && color.value === "")
-                  ? "border-primary ring-2 ring-primary"
-                  : "border-transparent"
-              )}
-              style={{
-                backgroundColor:
-                  color.value === ""
-                    ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
-                    : (color.value ?? "#faf8f5"),
-                background:
-                  color.value === "" ? "conic-gradient(#ccc 0 25%, #fff 0 50%, #ccc 0 75%, #fff 0)" : color.value,
-              }}
-              title={color.label}
-            />
-          ))}
+          ].map(color => {
+            const isActive = color.value === "" ? !design.textColor : design.textColor === color.value;
+            return (
+              <button
+                key={color.value}
+                onClick={() => updateDesign("textColor", color.value)}
+                className={cn(
+                  "size-8 rounded-full border-2 flex items-center justify-center",
+                  isActive ? "border-primary ring-2 ring-primary" : "border-transparent"
+                )}
+                style={color.value ? { backgroundColor: color.value } : undefined}
+                title={color.label}
+              >
+                {color.value === "" && (
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <line x1="0" y1="14" x2="14" y2="0" stroke="#888" strokeWidth="1.5"/>
+                    <line x1="3" y1="14" x2="14" y2="3" stroke="#ccc" strokeWidth="1.5"/>
+                  </svg>
+                )}
+              </button>
+            );
+          })}
           <input
             type="color"
             value={design.textColor ?? "#000000"}
