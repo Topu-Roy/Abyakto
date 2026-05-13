@@ -147,7 +147,7 @@ export function DesignControls() {
 
       <div>
         <h3 className="mb-3 text-sm font-medium">Background</h3>
-        <Tabs defaultValue={design.backgroundType} className="w-full">
+        <Tabs value={design.backgroundType} onValueChange={(v) => updateDesign("backgroundType", v)} className="w-full">
           <TabsList className="w-full">
             {bgTypes.map(bt => (
               <TabsTrigger key={bt.value} value={bt.value} className="flex-1">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { quoteAtom } from "@/state/design";
+import { quoteAtom, designAtom } from "@/state/design";
 import { toJpeg, toPng } from "html-to-image";
 import { useAtom } from "jotai";
 import { DesignControls } from "@/components/design-controls";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export default function CreatePage() {
   const [quote] = useAtom(quoteAtom);
+  const [design] = useAtom(designAtom);
   const [isExporting, setIsExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<"png" | "jpeg">("png");
   const cardRef = useRef<HTMLDivElement>(null);
@@ -22,11 +23,19 @@ export default function CreatePage() {
     try {
       const scale = 3;
 
+      const getBackgroundColor = () => {
+        if (design.backgroundType === "solid") return design.backgroundValue;
+        if (design.backgroundType === "texture") return "#faf8f5";
+        if (design.backgroundType === "gradient") return "#faf8f5";
+        return undefined;
+      };
+
       const exportFunc = exportFormat === "png" ? toPng : toJpeg;
       const dataUrl = await exportFunc(cardRef.current, {
         pixelRatio: scale,
         quality: exportFormat === "jpeg" ? 0.92 : undefined,
         cacheBust: true,
+        backgroundColor: getBackgroundColor(),
       });
 
       const link = document.createElement("a");
